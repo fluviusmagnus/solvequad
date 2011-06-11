@@ -1,0 +1,23 @@
+SOLVEQUAD README
+A useful tool that collects information about a quadratic equation.
+Input the a, b, c of a*x^2+b*X+c=0 then you will get some information.
+--------------------------------------------------------------
+CREDITS
+Koc Zhang zszth@126.com
+--------------------------------------------------------------
+2011.06.10 v0.1
+The first version.
+These functions are available:
+	Input the a, b, c of a*x^2+b*X+c=0;
+	Check a;
+	Get the shape (U or n);
+	Get the axis of symmetry;
+	Get the min or the max;
+	Get and check delta;
+	Get the real solutions.
+TODOS
+	To make this form: a*(x+b)+c=0 available.
+	To get the min or max of a closed interval.
+	To input or display in rational number and try to keep the radical sign.
+We hope to do some of these in the next version.
+-------------------------------------------------------------
