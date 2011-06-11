@@ -16,7 +16,7 @@ These functions are available:
 	Get and check delta;
 	Get the real solutions.
 TODOS
-	To make this form: a*(x+b)+c=0 available.
+	To make this form: a*(x+b)^2+c=0 available.
 	To get the min or max of a closed interval.
 	To input or display in rational number and try to keep the radical sign.
 We hope to do some of these in the next version.
