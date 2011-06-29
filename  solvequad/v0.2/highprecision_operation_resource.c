@@ -1,0 +1,403 @@
+//本文件所有代码来自于pucn.com的chenying。由于未注明所用的协议，请原作者速速与本项目取得联系。本文件的部分内容可能将用作头文件。
+//高精度整数除法是高精度加减乘的综合！   
+#include <stdio.h>    
+#include <stdlib.h>    
+#include <string.h>    
+#include <ctype.h>    
+   
+int cchkdig(char *r)    
+{    
+    int i=0;    
+    while(r[i]!='\0')    
+    {    
+        if(isdigit(r[i++])==0)    
+            return (0);    
+    }    
+    return (1);    
+}    
+//去掉整数串表示前面多余的零，最后结果为空串时置为"0"    
+void cdel0(char *r)    
+{   
+    unsigned int lr;    
+    int i=0, j;    
+    lr=strlen(r);    
+    while(r[i]=='0')    
+        ++i;   
+    if(i>0)    
+    {   
+        for(j=0; j<(lr-i); ++j)   
+            r[j]=r[j+i];   
+        for(j=lr-i; j<lr; ++j)    
+        {   
+            r[j]='\0';    
+        }   
+    }   
+   
+    if(r[0]=='\0')   
+    {   
+        r[0]='0';   
+    }    
+}    
+   
+int scmp(char *r, char *u)    
+{    
+    unsigned int lr, lu;    
+    cdel0(r);   
+    cdel0(u);    
+   
+    lr=strlen(r);    
+    lu=strlen(u);    
+   
+    if(lr>lu)    
+    {   
+        return 1;   
+    }   
+    else if (lr<lu)    
+    {   
+        return -1;   
+    }   
+    return (strcmp(r, u));    
+   
+}//end scmp()    
+   
+//两个串表示数的减法    
+char *ssub(char *r, char *u)    
+{   
+    unsigned int i,lr, lu, lp,c=0;    
+    char h,hc;    
+    char *p;   
+    if(scmp(r, u)<0)    
+        return NULL;    
+    lr=strlen(r);    
+    lu=strlen(u);    
+    p=(char *)malloc((unsigned int)(lr+1)*sizeof(char));    
+    for(i=0; i<lu; ++i)    
+    {   
+        h=r[lr-i-1]-u[lu-i-1]-c;    
+        if(h<0)    
+        {   
+            c=1;    
+            h=h+10;   
+        }    
+        else    
+            c=0;    
+        p[i]=h+'0';   
+        hc=h+'0';   
+    }    
+    for (i=lu; i<lr; ++i)    
+    {    
+        h=r[lr-i-1]-'0'-c;   
+        if(h<0)    
+        {   
+            c=1;    
+            h=h+10;    
+        }    
+        else    
+            c=0;    
+        p[i]='0'+h;    
+        hc='0'+h;   
+    }   
+    p[i]='\0';   
+    lp=i-1;   
+   
+    while(p[lp]=='0'&&lp!=0)   
+    {   
+        p[lp]='\0';   
+        lp--;    
+    }   
+   
+    for(i=0; i<(lp+1)/2; ++i)    
+    {    
+        hc=p[i];    
+        p[i]=p[lp-i];    
+        p[lp-i]=hc;    
+    }    
+    return (p);    
+}//end ssub()    
+   
+//两个串表示数的加法    
+char *sadd(char *r, char *u)    
+{    
+    unsigned int lr, lu, lp;    
+    int i, h, c=0;    
+    char hc, *p;    
+    lr=strlen(r);    
+    lu=strlen(u);    
+    if(lu>lr)    
+    {    
+        p=r;    
+        r=u;    
+        u=p;    
+        h=lr;    
+        lr=lu;    
+        lu=h;    
+    }    
+    p=(char *)malloc((unsigned int)(lr+2)*sizeof(char));    
+    for(i=0; i<lu; ++i)    
+    {    
+        h=r[lr-i-1]-'0'+u[lu-i-1]-'0'+c;    
+        if(h>9)    
+        {    
+            c=1;   
+            h=h-10;    
+        }    
+        else    
+            c=0;    
+        p[i]=h+'0';    
+    }    
+    for(i=lu; i<lr; ++i)    
+    {    
+        h=r[lr-i-1]-'0'+c;    
+        if(h>9)    
+        {    
+            c=1;    
+            h=h-10;    
+        }    
+        else    
+            c=0;    
+        p[i]='0'+h;    
+    }    
+    if(c>0)    
+    {    
+        p[i]=c+'0';    
+        lp=i;    
+    }    
+    else    
+        lp=i-1;    
+    for(i=lp+1; i<lr+2; ++i)    
+        p[i]='\0';    
+    for(i=0; i<(lp+1)/2; ++i)    
+    {    
+        hc=p[i];    
+        p[i]=p[lp-i];    
+        p[lp-i]=hc;    
+    }    
+    return (p);    
+}//end sadd()    
+   
+//两个串表示数的乘法    
+char *smut(char *r, char *u)    
+{    
+    unsigned int lr, lu, lp;    
+    int i, j, c, h;    
+    char *p;    
+    lr=strlen(r);    
+    lu=strlen(u);    
+    p=(char *)malloc((unsigned int)(lr+lu+1)*sizeof(char));    
+    for(i=0; i<lr+lu; ++i)    
+        p[i]='0';    
+    p[lr+lu]='\0';    
+    for(i=lr-1; i>=0; --i)    
+    {    
+        c=0;    
+        for(j=lu-1; j>=0; --j)    
+        {    
+            lp=i+j+1;    
+            h=(r[i]-'0')*(u[j]-'0')+p[lp]-'0'+c;    
+            c=h/10;    
+            h=h%10;    
+            p[lp]=h+'0';    
+        }    
+        if(c>0)p[i+j+1]=c+'0';    
+    }    
+    cdel0(p);    
+    return p;    
+}//end smut()    
+   
+//两个串表示数的除法，结果精确到小数点后第n位    
+char *sdivf(char *u, char *v, int n)    
+{    
+    char *p, *f, *r,*q;    
+    unsigned int i, lu, lv, lr, iw, c, h;    
+    int kh, j;    
+    lu=strlen(u);    
+    lv=strlen(v);    
+    f=(char *)malloc((unsigned int)(lu+n+3)*sizeof(char));    
+    q=(char *)malloc(sizeof(char));    
+    for(i=0; i<lu+n+3; ++i)    
+        f[i]='\0';    
+    r=(char *)malloc((unsigned int)(lv+2)*sizeof(char));    
+    for(i=0; i<lv+2; ++i)    
+        r[i]='\0';    
+    for(iw=0; iw<lu+n+2; ++iw)    
+    {    
+        if(iw<lu)    
+        {    
+            cdel0(r);    
+            lr=strlen(r);    
+            r[lr]=u[iw];    
+            r[lr+1]='\0';   
+        }    
+   
+        else if(iw>lu)    
+        {    
+            cdel0(r);   
+            q[0]='0';   
+            if(scmp(r, q)==0)   
+            {   
+                break;    
+            }   
+            lr=strlen(r);    
+            r[lr]='0';   
+            r[lr+1]='\0';    
+        }    
+        else    
+        {    
+            f[lu]='.';    
+            continue;    
+        }   
+        kh=0;    
+        while(scmp(r, v)>=0)    
+        {    
+            p=r;   
+            r=ssub(p, v);    
+            ++kh;    
+        }    
+        f[iw]=kh+'0';    
+    }    
+    if(iw==lu+n+2)    
+    {    
+        if(f[lu+n+1]>='5')    
+        {    
+            f[lu+n+1]='\0';    
+            c=1;    
+            for(j=lu+n; j>=0; --j)    
+            {    
+                if(c==0)    
+                {   
+                    break;    
+                }   
+                if(f[j]=='.')   
+                {   
+                    continue;    
+                }   
+                h=f[j]-'0'+c;    
+                if(h>9)    
+                {    
+                    h=h-10;    
+                    c=1;    
+                }    
+                else    
+                    c='\0';    
+                f[j]=h+'0';    
+            }    
+        }    
+        else    
+            f[lu+n+1]='\0';    
+   
+    }    
+    free(r);    
+    free(p);   
+    q=NULL;   
+    free(q);   
+    cdel0(f);    
+    return(f);    
+}//end sdivf()    
+   
+//两个串表示数的除法，结果分别用整商与余数表示    
+char *sdivkr(char *u, char *v, char **rout)    
+{    
+    char *f, *r;    
+    unsigned int i, lu, lv, lr, iw;    
+    int kh;    
+    lu=strlen(u);    
+    lv=strlen(v);    
+   
+    f=(char *)malloc((unsigned int)(lu+1)*sizeof(char));    
+    for(i=0; i<lu+1; ++i) f[i]='\0';    
+    r=(char *)malloc((unsigned int)(lv+2)*sizeof(char));    
+    for(i=0; i<lv+2; ++i) r[i]='\0';    
+   
+    for(iw=0; iw<lu; ++iw)    
+    {    
+        cdel0(r);    
+        lr=strlen(r);    
+        r[lr]=u[iw];    
+        r[lr+1]='\0';    
+        kh=0;    
+        while(scmp(r, v)>=0)    
+        {    
+            r=ssub(r, v);    
+            ++kh;    
+        }    
+        f[iw]=kh+'0';    
+    }    
+    cdel0(r);    
+    *rout=r;    
+    cdel0(f);    
+    return(f);   
+}//end *sdivkr()    
+   
+//调用上述函数实现两任意长正整数任意指定精度的算术计算器程序    
+void main(int argc, char *argv[])    
+{    
+    char *p, *r;    
+    int n;    
+    if(argc!=4)   
+    {    
+        if(argc!=3)   
+            printf(">>\"order n1 op n2\" or n ! \n");    
+        exit(0);    
+    }    
+    cdel0(argv[1]);    
+    if(cchkdig(argv[1])==0)   
+    {    
+        printf("Input data error, Input again!");    
+        exit(0);    
+    }    
+    cdel0(argv[3]);    
+    if(cchkdig(argv[3])==0)    
+    {    
+        printf("Input data error, Input again!");    
+        exit(0);    
+    }    
+   
+    if(strcmp(argv[2], "+")==0)    
+    {    
+        printf("%s", p=sadd(argv[1], argv[3]));    
+        free(p);    
+    }    
+    else if(strcmp(argv[2], "-")==0)    
+    {    
+        printf("%s", p=ssub(argv[1], argv[3]));    
+        free(p);    
+    }    
+    else if(strcmp(argv[2], "*")==0)    
+    {    
+        printf("%s", p=smut(argv[1], argv[3]));    
+        free(p);    
+    }    
+    else if(argv[2][0]=='/' && strlen(argv[2])==1)    
+    {    
+        if(argv[3][0]=='0')   
+        {   
+            printf("error!devided by zero!!\n");   
+            exit(0);   
+        }   
+        p=sdivkr(argv[1], argv[3], &r);    
+        printf("k=%s r=%s", p, r);    
+        free(p);    
+        free(r);    
+    }    
+   
+    else if(argv[2][0]=='/'&&strlen(argv[2])>1)    
+    {    
+        if(argv[3][0]=='0')   
+        {   
+            printf("error!devided by zero!!\n");   
+            exit(0);   
+        }   
+   
+        argv[2][0]='\0';    
+        cdel0(argv[2]);    
+        if(cchkdig(argv[2])==0)    
+        {    
+            printf("Input data error, Input again!");    
+            exit (0);    
+        }    
+        n=atoi(argv[2]);    
+        printf("%s", p=sdivf(argv[1], argv[3], n));   
+        free(p);    
+    }    
+    printf("\n");
+}   
