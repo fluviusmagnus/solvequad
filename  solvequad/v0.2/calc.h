@@ -38,7 +38,7 @@ void rof(int *a, int *b, int *c, int *d)
 }
 
 //Sqrt in the form of a*root(b). Avoid b<0. Output c,d.
-void finesqrt(int *a, int *b, int *c, int *d)
+void finesqrt(int *b, int *c, int *d)
 {
 	if(*b==0)
 	{
@@ -80,6 +80,38 @@ void fracmul(int *a, int *b, int *c, int *d, int *e, int *f)
 	rof(&x,&y,&m,&n);
 	*e=m;
 	*f=n;
+}
+
+//Fraction sqrt.
+void fracsqrt(int *a, int *b, int *c, int *d, int *e)
+{
+	if(*a==0||*b==0)
+	{
+		*c=0;
+		*d=1;
+		*e=0;
+	}
+	else
+	{
+		int x,y,x1,y1,x2,y2,m,n,q,rof1,rof2,rofa1,rofa2;
+		x=*a;
+		y=*b;
+		if(x<0&&y<0)
+		{
+			x=-x;
+			y=-y;
+		}
+		finesqrt(&x,&x1,&y1);
+		finesqrt(&y,&x2,&y2);
+		m=y1*y2;
+		finesqrt(&m,&q,&n);
+		rof1=x1*q;
+		rof2=x2*y2;
+		rof(&rof1,&rof2,&rofa1,&rofa2);
+		*c=rofa1;
+		*d=rofa2;
+		*e=n;
+	}
 }
 
 #endif
