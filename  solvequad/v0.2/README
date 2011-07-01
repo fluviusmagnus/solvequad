@@ -1,9 +1,14 @@
 SOLVEQUAD README
 A useful tool that collects information about a quadratic equation.
-Input the a, b, c of a*x^2+b*X+c=0 then you will get some information.
+Input the a, b, c, d, e, f of (a/b)*x^2+(c/d)*x+(e/f)=0 then you will get some information.
 --------------------------------------------------------------
 CREDITS
 Koc Zhang zszth@126.com
+--------------------------------------------------------------
+2011.07.01 v0.2
+The second version.
+No new feature added.
+But we can input and output in a rational way.
 --------------------------------------------------------------
 2011.06.10 v0.1
 The first version.

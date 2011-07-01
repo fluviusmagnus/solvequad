@@ -20,7 +20,7 @@ int gcd(int a, int b)
 //Reduction of a fraction. Output c,d.
 void rof(int *a, int *b, int *c, int *d)
 {
-	//if a==0 all these will be 0.
+	//If a==0 all these will be 0.
 	if (*a==0) {*c=0;*d=1;}
 	else
 	{
